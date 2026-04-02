@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:complite/errors/app_error.dart';
-import 'package:complite/models/company_dto.dart';
+import 'package:complite/features/company/data/dto/company_dto.dart';
 import 'package:complite/repositories/company_repository.dart';
 import 'package:complite/states/results.dart';
 import 'package:http/http.dart' as http;
