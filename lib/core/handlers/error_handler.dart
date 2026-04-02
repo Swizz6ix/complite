@@ -1,4 +1,4 @@
-import 'package:complite/errors/app_error.dart';
+import 'package:complite/core/errors/app_error.dart';
 
 void errorHandler(AppError error) {
   if (error is NoInternetError) {

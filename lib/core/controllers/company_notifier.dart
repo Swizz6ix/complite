@@ -1,11 +1,8 @@
-import 'package:complite/events/event_bus.dart';
-import 'package:complite/events/fetch_company_data.dart';
-import 'package:complite/utlities/cancellation_token.dart';
-import 'package:complite/models/company_dto.dart';
-import 'package:complite/states/results.dart';
-import 'package:complite/utlities/result_state.dart';
-import 'package:logging/logging.dart';
-import 'package:riverpod/legacy.dart';
+import 'package:complite/core/events/event_bus.dart';
+import 'package:complite/core/events/fetch_company_data.dart';
+import 'package:complite/core/states/results.dart';
+import 'package:complite/core/utilities/cancellation_token.dart';
+import 'package:complite/features/company/data/dto/company_dto.dart';
 
 class CompanyNotifier extends StateNotifier<Results<List<CompanyDto>>> {
   final _logger = Logger('complite.notifier');

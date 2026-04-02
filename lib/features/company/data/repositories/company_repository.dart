@@ -1,5 +1,5 @@
-import 'package:complite/models/company_dto.dart';
-import 'package:complite/states/results.dart';
+import 'package:complite/core/states/results.dart';
+import 'package:complite/features/company/data/dto/company_dto.dart';
 
 abstract class CompanyRepository {
   Future<Results<List<CompanyDto>>> fetchCompany(

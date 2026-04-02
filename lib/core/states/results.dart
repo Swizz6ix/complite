@@ -1,4 +1,4 @@
-import 'package:complite/errors/app_error.dart';
+import 'package:complite/core/errors/app_error.dart';
 
 sealed class Results<T> {}
 

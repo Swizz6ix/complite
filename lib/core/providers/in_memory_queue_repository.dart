@@ -1,5 +1,5 @@
-import 'package:complite/events/company_event.dart';
-import 'package:complite/repositories/queue_repository.dart';
+import 'package:complite/core/events/company_event.dart';
+import 'package:complite/features/data/repositories/queue_repository.dart';
 
 class InMemoryQueueRepository implements QueueRepository {
   final List<CompanyEvent> _queue = [];

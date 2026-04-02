@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:complite/providers/network_info.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:complite/core/providers/network_info.dart';
 
 class NetworkProvider implements NetworkInfo {
   final Connectivity _connectivity;

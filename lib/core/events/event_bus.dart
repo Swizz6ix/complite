@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:complite/core/events/company_event.dart';
 import 'package:complite/core/handlers/event_handler.dart';
-import 'package:complite/core/handlers/event_handler.dart';
-import 'package:complite/core/utlities/cancellation_token.dart';
 import 'package:complite/core/middlewares/middleware.dart';
+import 'package:complite/core/utilities/cancellation_token.dart';
 import 'package:complite/core/states/results.dart';
 
 class EventBus {

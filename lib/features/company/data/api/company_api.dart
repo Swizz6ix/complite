@@ -2,13 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:complite/errors/app_error.dart';
+import 'package:complite/core/errors/app_error.dart';
+import 'package:complite/core/states/results.dart';
 import 'package:complite/features/company/data/dto/company_dto.dart';
-import 'package:complite/repositories/company_repository.dart';
-import 'package:complite/states/results.dart';
-import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
-import 'package:retry/retry.dart';
+import 'package:complite/features/company/data/repositories/company_repository.dart';
 
 class CompanyApi implements CompanyRepository {
   final _logger = Logger("CompanyApp.Repository");

@@ -1,11 +1,9 @@
-import 'package:complite/events/event_bus.dart';
-import 'package:complite/events/fetch_company_data.dart';
-import 'package:complite/handlers/fetch_company_handler.dart';
-import 'package:complite/middlewares/pipeline.dart';
-import 'package:complite/providers/company_repository_provider.dart';
-import 'package:complite/providers/network_provider.dart';
-import 'package:complite/providers/queue_repository_provider.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:complite/core/events/event_bus.dart';
+import 'package:complite/core/events/fetch_company_data.dart';
+import 'package:complite/core/handlers/fetch_company_handler.dart';
+import 'package:complite/core/providers/company_repository_provider.dart';
+import 'package:complite/core/providers/network_provider.dart';
+import 'package:complite/core/providers/queue_repository_provider.dart';
 
 final eventBusProvider = Provider<EventBus>((ref) {
   final repo = ref.read(companyRepositoryProvider);
