@@ -6,9 +6,11 @@ import 'package:complite/core/errors/app_error.dart';
 import 'package:complite/core/states/results.dart';
 import 'package:complite/features/company/data/dto/company_dto.dart';
 import 'package:complite/features/company/data/repositories/company_repository.dart';
+import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
 
 class CompanyApi implements CompanyRepository {
-  final _logger = Logger("CompanyApp.Repository");
+  // final _logger = Logger("CompanyApp.Repository");
   @override
   Future<Results<List<CompanyDto>>> fetchCompany(
     // String requestId, 
@@ -36,27 +38,27 @@ class CompanyApi implements CompanyRepository {
           errorMessage: "server error ${response.statusCode}");
       }
 
-      _logger.info("[$requestId] HTTP status code: ${response.statusCode}");
+      // _logger.info("[$requestId] HTTP status code: ${response.statusCode}");
       
       final List<dynamic> jsonList = jsonDecode(response.body);
       final companies = jsonList
       .map((json) => CompanyDto.fromJson(json))
       .toList();
 
-      _logger.fine("[$requestId] Parse ${companies.length} Companies");
+      // _logger.fine("[$requestId] Parse ${companies.length} Companies");
       print("done");
       return Success("[$requestId]: page", companies);
     } on SocketException {
-      _logger.warning("[$requestId] No internet connection");
+      // _logger.warning("[$requestId] No internet connection");
     return Failure(requestId: requestId, error:NoInternetError());
     } on TimeoutException {
-      _logger.warning("[$requestId] Request time out");
+      // _logger.warning("[$requestId] Request time out");
       return Failure(requestId: requestId, error:NoInternetError());
     } on FormatException catch (e) {
-      _logger.severe("[$requestId] Json parsing error: ${e.message}");
+      // _logger.severe("[$requestId] Json parsing error: ${e.message}");
       return Failure(requestId: requestId, error:ParsingError());
     } catch (e, stack) {
-      _logger.severe("[$requestId] Unknown error: $e", e, stack);
+      // _logger.severe("[$requestId] Unknown error: $e", e, stack);
       return Failure(requestId: requestId, error:BusinessLogicError("Unknow error occurred"));
     }
   }

@@ -2,10 +2,12 @@ import 'package:complite/core/events/event_bus.dart';
 import 'package:complite/core/events/fetch_company_data.dart';
 import 'package:complite/core/states/results.dart';
 import 'package:complite/core/utilities/cancellation_token.dart';
+import 'package:complite/core/utilities/result_state.dart';
 import 'package:complite/features/company/data/dto/company_dto.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 class CompanyNotifier extends StateNotifier<Results<List<CompanyDto>>> {
-  final _logger = Logger('complite.notifier');
+  // final _logger = Logger('complite.notifier');
   final EventBus bus;
 
   CompanyNotifier(this.bus) : super(Idle());
