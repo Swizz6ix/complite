@@ -1,4 +1,4 @@
-import 'package:complite/events/company_event.dart';
+import 'package:complite/core/events/company_event.dart';
 
 abstract class QueueRepository {
   Future<void> enqueue(CompanyEvent event);
