@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:io';
 
+import 'package:complite/core/errors/app_error.dart';
 import 'package:complite/core/events/company_event.dart';
 import 'package:complite/core/middlewares/middleware.dart';
 import 'package:complite/core/states/results.dart';
@@ -20,6 +23,13 @@ class RetryMiddleware extends Middleware{
     try {
       return await next(event);
     } catch (e) {
+      if (e is SocketException || e is TimeoutException) {
+        rethrow; // let API handle it
+      }
+
+      if (e is ParsingError || e is BusinessLogicError) {
+        rethrow; //don't retry
+      }
       attempt++;
 
       if (attempt >= maxRetries) rethrow;
