@@ -1,7 +1,8 @@
 import 'package:complite/core/events/cacheable_event.dart';
 import 'package:complite/core/events/retryable_event.dart';
+import 'package:complite/core/events/serializable_event.dart';
 
-base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements CacheableEvent {
+base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements SerializableEvent {
   final String companyId;
   // final int page;
   // final int limit;
@@ -16,7 +17,14 @@ base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements 
   });
 
   @override
-  String get cacheKey => "company-$companyId";
+  Map<String, dynamic> toJson() {
+    return {
+      'companyId': companyId,
+    };
+  }
+
+  @override
+  String get type => "FetchCompanyData";
 
   @override
   FetchCompanyData create({String? requestId, Stopwatch? stopwatch}) {

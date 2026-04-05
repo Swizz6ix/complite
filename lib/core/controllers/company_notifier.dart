@@ -1,5 +1,6 @@
 import 'package:complite/core/events/event_bus.dart';
 import 'package:complite/core/events/fetch_company_data.dart';
+import 'package:complite/core/providers/replay_engine_provider.dart';
 import 'package:complite/core/states/results.dart';
 import 'package:complite/core/utilities/cancellation_token.dart';
 import 'package:complite/core/utilities/result_state.dart';
@@ -17,22 +18,22 @@ class CompanyNotifier extends StateNotifier<Results<List<CompanyDto>>> {
     final event = FetchCompanyData(companyId);
     state = Loading(event.requestId);
     print("notifier");
+    
+    final data = await bus.dispatch<FetchCompanyData, List<CompanyDto>> (
+      event,
+      token: token,
+    );
+    print("nofity suc");
 
-      final data = await bus.dispatch<FetchCompanyData, List<CompanyDto>> (
-        event,
-        token: token,
-      );
-      print("nofity suc");
-
-      print("return state1 --> $state");
-      state = data;
-      print("return state2 --> $state");
+    print("return state1 --> $state");
+    state = data;
+    print("return state2 --> $state");
       
-      state.when(
-        idle: () {},
-        loading: (_) => print("loading"),
-        success: (_, data) => print("success $data"),
-        failure: (_, err) => print("failed $err"),
-      );
+    state.when(
+      idle: () {},
+      loading: (_) => print("loading"),
+      success: (_, data) => print("success $data"),
+      failure: (_, err) => print("failed $err"),
+    );
   }
 }

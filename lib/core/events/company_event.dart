@@ -1,4 +1,4 @@
-abstract class CompanyEvent< T extends CompanyEvent<T>> {
+abstract class CompanyEvent<T> {
   final String requestId;
   final Stopwatch? stopwatch;
 

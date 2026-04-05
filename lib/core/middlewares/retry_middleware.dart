@@ -5,10 +5,13 @@ import 'package:complite/core/errors/app_error.dart';
 import 'package:complite/core/events/company_event.dart';
 import 'package:complite/core/middlewares/middleware.dart';
 import 'package:complite/core/states/results.dart';
+import 'package:complite/core/utilities/replay_engine.dart';
 
 class RetryMiddleware extends Middleware{
   // final _logger = Logger("CompanyApp.RetryMiddleware");
   final int maxRetries;
+  final ReplayEngine replay;
+  bool _hasreplayed = false;
 
   RetryMiddleware({this.maxRetries = 3});
 
@@ -21,6 +24,7 @@ class RetryMiddleware extends Middleware{
 
   while (true) {
     try {
+      return await replay.replay();
       return await next(event);
     } catch (e) {
       if (e is SocketException || e is TimeoutException) {
