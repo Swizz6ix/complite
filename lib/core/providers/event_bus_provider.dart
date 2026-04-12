@@ -1,22 +1,28 @@
 import 'package:complite/core/events/event_bus.dart';
 import 'package:complite/core/handlers/event_handler.dart';
 import 'package:complite/core/middlewares/pipeline.dart';
+import 'package:complite/core/providers/pipeline_registrations_provider.dart';
 import 'package:complite/core/registrations/handle_registrations_provider.dart';
+import 'package:complite/core/registrations/middleware_registry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final eventBusProvider = Provider<EventBus>((ref) {
-  final registration = ref.read(handlerRegistrationsProvider);
+  final handlerRegs = ref.read(handlerRegistrationsProvider);
+  final pipelineRegs = ref.read(pipelineRegistrationProvider);
 
-  final Map<Type, List<EventHandler>> handlers = {};
+  final Map<Type, EventHandler> handlers = {};
 
-  for (final reg in registration) {
-    handlers.putIfAbsent(reg.eventType, () => []).add(reg.handler);
+  for (final reg in handlerRegs) {
+    handlers.putIfAbsent(reg.eventType, () => reg.handler);
   }
 
-  final bus = EventBus(
-    middlewares: deFaultPipeline.all, 
-    handlers: handlers,
-  );
+  final Map<Type, MiddlewareRegistry> pipelines = {};
+  for (final pipe in pipelineRegs) {
+    pipelines[pipe.eventType] = pipe.pipeline;
+  }
 
-  return bus;
+  return EventBus(
+    pipelines: pipelines, 
+    handlers: handlers
+  );
 });

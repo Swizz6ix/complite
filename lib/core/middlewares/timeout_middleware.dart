@@ -1,5 +1,6 @@
 import 'package:complite/core/events/company_event.dart';
 import 'package:complite/core/middlewares/middleware.dart';
+import 'package:complite/core/states/middleware_phase.dart';
 import 'package:complite/core/states/results.dart';
 
 class TimeoutMiddleware implements Middleware {
@@ -9,9 +10,15 @@ class TimeoutMiddleware implements Middleware {
   TimeoutMiddleware({required this.timeout});
 
   @override
-  Future<Results<T>> handle<E extends CompanyEvent<E>, T>(
-    E event,
-    Future<Results<T>> Function(E event) next,
+  MiddlewarePhase phase = MiddlewarePhase.timeout;
+
+  @override
+  int orderInPhase = 60;
+
+  @override
+  Future<Results<T>> handle<T>(
+    CompanyEvent event,
+    Future<Results<T>> Function(CompanyEvent event) next,
   ) async {
     // _logger.info("TimeoutMiddleware START ${event.requestId}");
     

@@ -11,24 +11,16 @@ import 'package:retry/retry.dart';
 
 class CompanyApi implements CompanyRepository {
   // final _logger = Logger("CompanyApp.Repository");
-  final LocalDataSource local;
-  final RemoteDataSource remote;
-
   @override
   Future<Results<List<CompanyDto>>> fetchCompany(
-    // String requestId, 
+    String requestId, 
     // {
       // int page = 1,
       // int limit = 10
     // }
     ) async {
       final requestId = DateTime.now().toIso8601String();
-      final cached = await local.getCompanies();
     try {
-      if (cached.isNotEmpty) {
-        _refreshInBackground(event);
-        return Success(requestId, cached);
-      } else {
       final response = await retry(
         () => http
         .get(Uri.parse(

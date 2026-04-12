@@ -1,76 +1,36 @@
 import 'dart:async';
 
 import 'package:complite/core/events/company_event.dart';
+import 'package:complite/core/events/event_pipeline.dart';
 import 'package:complite/core/handlers/event_handler.dart';
 import 'package:complite/core/middlewares/middleware.dart';
+import 'package:complite/core/registrations/middleware_registry.dart';
 import 'package:complite/core/utilities/cancellation_token.dart';
 import 'package:complite/core/states/results.dart';
 
 class EventBus {
-  final List<Middleware> _middleware;
-  final Map<Type, List<EventHandler>> _handlers;
+  final Map<Type, MiddlewareRegistry> _pipelines;
+  final Map<Type, EventHandler> _handlers;
 
 
 
   EventBus({
-    required List<Middleware> middlewares,
-    required Map<Type, List<EventHandler>> handlers,
-  }) : _middleware = middlewares,
+    required Map<Type, MiddlewareRegistry> pipelines,
+    required Map<Type, EventHandler> handlers,
+  }) : _pipelines = pipelines,
        _handlers = handlers;
 
-  Future<Results<R>> dispatch<E extends CompanyEvent<E>, R>(
+  Future<Results> dispatch<E extends CompanyEvent<E>, R>(
     E event, {
     CancellationToken? token,
     }) async {
       print('received');
-      final handlers = _handlers[event.runtimeType];
+      final handler = _handlers[E] as EventHandler;
+      final pipeline = _pipelines[E] as MiddlewareRegistry;
 
-      if (handlers == null || handlers.isEmpty) {
-        return Failure(
-          requestId: event.requestId,
-          errorMessage: "No handler registered for ${E.toString()}"
-        );
-      }
-
-      
-
-      // Buid middleware chain (reverse Composition)
-      try {
-        final handler = handlers.first;
-
-        Future<Results<R>> callHandler(E e) async {
-          token?.throwIfCancelled();
-          print("called token");
-          final typedHandler = handler as EventHandler<E, Results<R>>;
-          return await typedHandler.handle(e);
-        }
-        print("called after token");
-        return await _buildPipeline(callHandler)(event);
-      
-      } catch (e) {
-        return Failure(
-          requestId: event.requestId, 
-          errorMessage: e.toString()
-        );
-        
-      }
-  }
-  
-  Future<Results<R>> Function(E) _buildPipeline<E extends CompanyEvent<E>, R>(
-    Future<Results<R>> Function(E event) handler,
-  ) {
-    Future<Results<R>> Function(E) pipeline = handler;
-    print("called 2");
-    for (final middleware in _middleware.reversed) {
-      final next = pipeline;
-      print('called inner 2');
-      pipeline = (event) {
-        print("called inner 2 inner ${event.runtimeType}");
-        return middleware.handle<E, R>(event, next);
-      };
+      return pipeline.execute(
+        event, 
+        handler.handle
+      );
     }
-    print("piping");
-    print("pipip --> $pipeline");
-    return pipeline;
-  }
 }

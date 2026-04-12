@@ -8,11 +8,8 @@ import 'package:complite/features/company/data/repositories/queue_repository.dar
 
 class FetchCompanyHandler implements EventHandler<FetchCompanyData, Results<List<CompanyDto>>> {
   final CompanyRepository repository;
-  final QueueRepository _queue;
-  final NetworkInfo network;
-  
 
-  FetchCompanyHandler(this.repository, this._queue, this.network);
+  FetchCompanyHandler(this.repository);
 
   @override
   Future<Results<List<CompanyDto>>> handle(FetchCompanyData event) async {
@@ -21,19 +18,13 @@ class FetchCompanyHandler implements EventHandler<FetchCompanyData, Results<List
     try {
       // Optional simulated API delay
       await Future.delayed(Duration(milliseconds: 300));
-      
-      if (!await network.isConnected){
-        await _queue.enqueue(event);
-        return Failure(
-          requestId: event.requestId, 
-          errorMessage:  "No internet connection"
-        );
-      }
 
-      return await repository.fetchCompany(
+      // fetch from API
+      return await repository.fetchCompany(event.requestId,
         // page: event.page,
         // limit: event.limit,
       );
+
     } finally {
       event.stopwatch?.stop();
     }

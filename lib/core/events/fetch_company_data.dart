@@ -27,7 +27,7 @@ base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements 
   String get type => "FetchCompanyData";
 
   @override
-  FetchCompanyData create({String? requestId, Stopwatch? stopwatch}) {
+  FetchCompanyData createInternal({String? requestId, Stopwatch? stopwatch}) {
     return FetchCompanyData(
       companyId,
       // page: page,
@@ -53,4 +53,7 @@ base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements 
       retryCount: retryCount ?? this.retryCount,
     );
   }
+
+  @override
+  Map<String, dynamic> toCacheKey() => {};
 }
