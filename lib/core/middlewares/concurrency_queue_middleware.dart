@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:complite/core/events/company_event.dart';
 import 'package:complite/core/middlewares/middleware.dart';
@@ -8,7 +9,7 @@ import 'package:complite/core/states/results.dart';
 class ConcurrencyQueueMiddleware implements Middleware {
   final int maxConcurrent;
   int _running = 0;
-  final _queue = <Future Function()>[];
+  final Queue<Future<void> Function()> _queue = Queue();
 
   ConcurrencyQueueMiddleware({this.maxConcurrent = 3});
 
@@ -23,29 +24,41 @@ class ConcurrencyQueueMiddleware implements Middleware {
     CompanyEvent event,
     Future<Results<T>> Function(CompanyEvent event) next,
   ) {
+    print("started concurrent");
     final completer = Completer<Results<T>>();
-
+    
+    print("about to add to queue");
     _queue.add(() async {
       try {
-        _running++;
         final result = await next(event);
-        completer.complete(result);
+
+        if (!completer.isCompleted) {
+          completer.complete(result);
+        }
       } catch (e, s) {
-        completer.completeError(e, s);
+        if (!completer.isCompleted) {
+          completer.completeError(e, s);
+        }
       } finally {
         _running--;
-        _processQueue();
+        scheduleMicrotask(_processQueue);
       }
     });
+
+    print("queue added");
     
-    _processQueue();
+    scheduleMicrotask(_processQueue);
+    print("process start running ${_queue.length}");
     return completer.future;
   }
 
   void _processQueue(){
     while (_running < maxConcurrent && _queue.isNotEmpty) {
-      final task = _queue.removeAt(0);
+      final task = _queue.removeFirst();
+      _running++;
+      print("launch task");
       task();
+      print("task completer");
     }
   }
 }

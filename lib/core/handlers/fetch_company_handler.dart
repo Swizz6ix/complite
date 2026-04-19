@@ -1,3 +1,4 @@
+import 'package:complite/core/events/company_event.dart';
 import 'package:complite/core/events/fetch_company_data.dart';
 import 'package:complite/core/handlers/event_handler.dart';
 import 'package:complite/core/providers/network_info.dart';
@@ -6,13 +7,15 @@ import 'package:complite/features/company/data/dto/company_dto.dart';
 import 'package:complite/features/company/data/repositories/company_repository.dart';
 import 'package:complite/features/company/data/repositories/queue_repository.dart';
 
-class FetchCompanyHandler implements EventHandler<FetchCompanyData, Results<List<CompanyDto>>> {
+class FetchCompanyHandler implements EventHandler {
   final CompanyRepository repository;
 
   FetchCompanyHandler(this.repository);
 
   @override
-  Future<Results<List<CompanyDto>>> handle(FetchCompanyData event) async {
+  Future<Results<List<CompanyDto>>> handle(CompanyEvent event) async {
+    event = event as FetchCompanyData;
+    
     event.stopwatch?.start();
 
     try {

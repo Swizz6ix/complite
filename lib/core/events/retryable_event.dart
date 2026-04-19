@@ -2,17 +2,18 @@
 import 'package:complite/core/events/company_event.dart';
 
 abstract base class RetryableEvent<T extends CompanyEvent<T>> extends CompanyEvent<T> {
-  final int retryCount;
 
   RetryableEvent({
     super.requestId,
     super.stopwatch,
-    this.retryCount = 0,
+    super.retryCount,
   });
 
-  T createWithRetry({
-    String? requestId,
-    Stopwatch? stopwatch,
-    int? retryCount,
-  });
-}               
+  T createWithRetry() {
+    return createInternal(
+      requestId: requestId,
+      stopwatch:  stopwatch,
+      retryCount:  retryCount,
+    );
+  }
+}

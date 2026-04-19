@@ -20,13 +20,13 @@ class EventBus {
   }) : _pipelines = pipelines,
        _handlers = handlers;
 
-  Future<Results> dispatch<E extends CompanyEvent<E>, R>(
-    E event, {
+  Future<Results> dispatch(
+    CompanyEvent event, {
     CancellationToken? token,
     }) async {
       print('received');
-      final handler = _handlers[E] as EventHandler;
-      final pipeline = _pipelines[E] as MiddlewareRegistry;
+      final handler = _handlers[event.runtimeType] as EventHandler;
+      final pipeline = _pipelines[event.runtimeType] as MiddlewareRegistry;
 
       return pipeline.execute(
         event, 

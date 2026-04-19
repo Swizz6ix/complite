@@ -1,9 +1,12 @@
+import 'package:complite/core/events/serializable_event.dart';
 import 'package:complite/core/states/event_status.dart';
 
 abstract class CompanyEvent<T> {
   final String requestId;
   final Stopwatch? stopwatch;
   final DateTime createdAt;
+
+  String get type;
 
   EventStatus status;
   int retryCount;
@@ -31,15 +34,20 @@ abstract class CompanyEvent<T> {
 
     T createInternal({
       required String requestId, 
-      Stopwatch? stopwatch
+      Stopwatch? stopwatch,
+      int? retryCount,
     });
 
-    T copyWith({Stopwatch? stopwatch}) {
-      return createInternal(requestId: requestId, stopwatch: stopwatch ?? this.stopwatch);
+    T copyWith({
+      Stopwatch? stopwatch,
+      int? retryCount,
+    }) {
+      return createInternal(
+        requestId: requestId, 
+        stopwatch: stopwatch ?? this.stopwatch,
+        retryCount: retryCount ?? this.retryCount,
+      );
     }
-
-    // explicit identity
-    String get type;
-
+    
     Map<String, dynamic> toCacheKey();
 }

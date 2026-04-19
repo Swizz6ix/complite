@@ -21,6 +21,7 @@ final eventBusProvider = Provider<EventBus>((ref) {
     pipelines[pipe.eventType] = pipe.pipeline;
   }
 
+  print("event bus done");
   return EventBus(
     pipelines: pipelines, 
     handlers: handlers

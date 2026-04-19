@@ -2,11 +2,11 @@ import 'package:complite/core/events/cacheable_event.dart';
 import 'package:complite/core/events/retryable_event.dart';
 import 'package:complite/core/events/serializable_event.dart';
 
-base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements SerializableEvent {
+base class FetchCompanyData extends RetryableEvent<FetchCompanyData> {
   final String companyId;
   // final int page;
   // final int limit;
- 
+  static const eventType = 'FetchCompanyData';
   FetchCompanyData(
     this.companyId, {
       // this.page = 1,
@@ -17,30 +17,11 @@ base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements 
   });
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
-      'companyId': companyId,
-    };
-  }
+  String get type => eventType;
 
   @override
-  String get type => "FetchCompanyData";
-
-  @override
-  FetchCompanyData createInternal({String? requestId, Stopwatch? stopwatch}) {
-    return FetchCompanyData(
-      companyId,
-      // page: page,
-      // limit: limit,
-      requestId: requestId, 
-      stopwatch: stopwatch, 
-      retryCount: retryCount
-    );
-  }
-
-  @override
-  FetchCompanyData createWithRetry({
-    String? requestId,
+  FetchCompanyData createInternal({
+    required String requestId, 
     Stopwatch? stopwatch,
     int? retryCount,
   }) {
@@ -49,11 +30,13 @@ base class FetchCompanyData extends RetryableEvent<FetchCompanyData> implements 
       // page: page,
       // limit: limit,
       requestId: requestId, 
-      stopwatch: stopwatch,
+      stopwatch: stopwatch, 
       retryCount: retryCount ?? this.retryCount,
     );
   }
 
   @override
-  Map<String, dynamic> toCacheKey() => {};
+  Map<String, dynamic> toCacheKey() => {
+    'companyId': companyId,
+  };
 }

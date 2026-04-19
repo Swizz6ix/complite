@@ -8,4 +8,6 @@ abstract class QueueRepository {
   Future<void> markFailed(String requestId);
   Future<void> incrementRetry(String requestId);
   Future<void> remove(String requestId);
+  Future<void> moveToDeadLetter(CompanyEvent event);
+  Future<List<CompanyEvent>> getDeadLetter();
 }

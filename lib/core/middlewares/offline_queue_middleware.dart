@@ -20,9 +20,14 @@ class OfflineQueueMiddleware implements Middleware {
     CompanyEvent event,
     Future<Results<T>> Function(CompanyEvent event) next,
   ) async {
+    print("enter offline");
     try {
-      return await next(event);
-    } catch (_) {
+      final result = await next(event);
+      print("exit offline");
+      return result;
+    } catch (e, s) {
+      print("offline failed $e");
+      print(s);
       await _queue.enqueue(event);
 
       return Failure(

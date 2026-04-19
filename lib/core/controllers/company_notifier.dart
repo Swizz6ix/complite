@@ -4,9 +4,9 @@ import 'package:complite/core/states/results.dart';
 import 'package:complite/core/utilities/cancellation_token.dart';
 import 'package:complite/core/utilities/result_state.dart';
 import 'package:complite/features/company/data/dto/company_dto.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CompanyNotifier extends StateNotifier<Results> {
+class CompanyNotifier extends StateNotifier<Results<dynamic>> {
   // final _logger = Logger('complite.notifier');
   final EventBus bus;
 
@@ -19,7 +19,7 @@ class CompanyNotifier extends StateNotifier<Results> {
     state = Loading(event.requestId);
     print("notifier");
 
-      final data = await bus.dispatch<FetchCompanyData, List<CompanyDto>> (
+      final data = await bus.dispatch(
         event,
         token: token,
       );

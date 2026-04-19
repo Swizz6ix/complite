@@ -6,7 +6,7 @@ import 'package:complite/core/providers/mobile_network_info.dart';
 import 'package:complite/core/providers/queue_repository_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final fetchCompanyHandlerProvider = Provider<EventHandler<FetchCompanyData, void>>((ref) {
+final fetchCompanyHandlerProvider = Provider<EventHandler>((ref) {
   final repo = ref.read(companyRepositoryProvider);
 
   return FetchCompanyHandler(repo,);

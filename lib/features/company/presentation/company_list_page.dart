@@ -23,15 +23,19 @@ class CompanyListPage extends ConsumerWidget {
           )
         ),
         loading: (_) =>  Center(child: const CircularProgressIndicator()),
-        success: (_, companies) => Expanded(
-          child: ListView.builder(
-          itemCount: companies.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(companies[index].name),
-              subtitle: Text(companies[index].industry),
-            );
-          }),
+        success: (_, companies) => Column(
+          children: [ 
+            Expanded(
+              child: ListView.builder(
+              itemCount: companies.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(companies[index].name),
+                  subtitle: Text(companies[index].industry),
+                );
+              }),
+            ),
+          ]
         ),
         failure: (_, err) => Center(
           child: Column(

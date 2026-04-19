@@ -87,4 +87,15 @@ class MobileNetworkInfo implements NetworkInfo {
     }
     return false;
   }
+
+  @override
+  Stream<bool> get onStatusChange async* {
+    await for (final result in _connectivity.onConnectivityChanged) {
+      if (result == ConnectivityResult.none) {
+        yield false;
+      } else {
+        yield await isConnected;
+      }
+    }
+  }
 }
