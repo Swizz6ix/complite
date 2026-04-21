@@ -8,6 +8,7 @@ class InMemoryCacheStore implements CacheStore {
   @override
   Future<CacheEntry<T>?> get<T>(String key) async {
     final entry = _map[key];
+    print("read memory $entry ---> $key");
 
     if (entry == null) return null;
 

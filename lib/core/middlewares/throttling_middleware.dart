@@ -17,9 +17,9 @@ class ThrottlingMiddleware implements Middleware {
   int orderInPhase = 35;
 
   @override
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next
+    Future<T> Function(CompanyEvent event) next
   ) async {
     final now = DateTime.now();
 

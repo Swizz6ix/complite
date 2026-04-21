@@ -14,12 +14,12 @@ class DeduplicationMiddleware implements Middleware {
   int orderInPhase = 10;
 
   @override
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next,
+    Future<T> Function(CompanyEvent event) next,
   ) {
     if (_activeRequests.containsKey(event.requestId)) {
-      return _activeRequests[event.requestId] as Future<Results<T>>;
+      return _activeRequests[event.requestId] as Future<T>;
     }
 
     final future = next(event);

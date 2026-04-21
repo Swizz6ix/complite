@@ -12,18 +12,25 @@ final eventBusProvider = Provider<EventBus>((ref) {
 
   final Map<Type, EventHandler> handlers = {};
 
+  print("pre-reg");
   for (final reg in handlerRegs) {
+    print("reg");
     handlers.putIfAbsent(reg.eventType, () => reg.handler);
   }
 
+  print("pre-pipe");
   final Map<Type, MiddlewareRegistry> pipelines = {};
   for (final pipe in pipelineRegs) {
+    print("pipe");
     pipelines[pipe.eventType] = pipe.pipeline;
   }
 
   print("event bus done");
-  return EventBus(
+  final bus = EventBus(
     pipelines: pipelines, 
     handlers: handlers
   );
+
+  print("after bus $bus");
+  return bus;
 });

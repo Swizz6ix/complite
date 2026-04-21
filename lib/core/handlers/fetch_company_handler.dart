@@ -13,7 +13,7 @@ class FetchCompanyHandler implements EventHandler {
   FetchCompanyHandler(this.repository);
 
   @override
-  Future<Results<List<CompanyDto>>> handle(CompanyEvent event) async {
+  Future<List<CompanyDto>> handle(CompanyEvent event) async {
     event = event as FetchCompanyData;
     
     event.stopwatch?.start();

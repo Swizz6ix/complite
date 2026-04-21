@@ -20,9 +20,9 @@ class RetryMiddleware extends Middleware{
   int orderInPhase = 55;
 
   @override
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next,
+    Future<T> Function(CompanyEvent event) next,
   ) async {
     int attempt = 0;
 

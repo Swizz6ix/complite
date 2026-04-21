@@ -7,8 +7,8 @@ abstract class Middleware {
 
   int get orderInPhase => 0;
 
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next,
+    Future<T> Function(CompanyEvent event) next,
   );
 }

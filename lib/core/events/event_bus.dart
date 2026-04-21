@@ -9,24 +9,31 @@ import 'package:complite/core/utilities/cancellation_token.dart';
 import 'package:complite/core/states/results.dart';
 
 class EventBus {
-  final Map<Type, MiddlewareRegistry> _pipelines;
-  final Map<Type, EventHandler> _handlers;
-
+  final Map<Type, MiddlewareRegistry<dynamic>> _pipelines;
+  final Map<Type, EventHandler<dynamic>> _handlers;
 
 
   EventBus({
-    required Map<Type, MiddlewareRegistry> pipelines,
-    required Map<Type, EventHandler> handlers,
+    required Map<Type, MiddlewareRegistry<dynamic>> pipelines,
+    required Map<Type, EventHandler<dynamic>> handlers,
   }) : _pipelines = pipelines,
        _handlers = handlers;
 
-  Future<Results> dispatch(
+  Future<dynamic> dispatch<R>(
     CompanyEvent event, {
     CancellationToken? token,
     }) async {
+      final eventType = event.runtimeType;
       print('received');
-      final handler = _handlers[event.runtimeType] as EventHandler;
-      final pipeline = _pipelines[event.runtimeType] as MiddlewareRegistry;
+      final handler = _handlers[eventType];
+      if (handler == null) {
+        throw StateError("No handler registered for $eventType");
+      }
+
+      final pipeline = _pipelines[eventType];
+      if (pipeline == null) {
+        throw StateError("No pipeline registered fo $eventType");
+      }
 
       return pipeline.execute(
         event, 

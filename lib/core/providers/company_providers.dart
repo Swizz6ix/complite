@@ -5,9 +5,6 @@ import 'package:complite/core/states/results.dart';
 import 'package:complite/features/company/data/dto/company_dto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final companyProvider = StateNotifierProvider<CompanyNotifier, Results>((ref) {
-  print("before event provider");
-  return CompanyNotifier(
-    ref.read(eventBusProvider),
-    );
-});
+final companyProvider = AsyncNotifierProvider<CompanyNotifier, List<CompanyDto>>(
+  CompanyNotifier.new
+);

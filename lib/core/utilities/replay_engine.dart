@@ -38,13 +38,9 @@ class ReplayEngine {
     try {
       await _queue.markProcessing(event.requestId);
 
-      final result = await _bus.dispatch(event);
+      await _bus.dispatch<List<CompanyDto>>(event);
 
-      if (result is Success) {
       await _queue.markCompleted(event.requestId);
-      } else {
-        Failure(requestId: event.requestId, errorMessage: result.toString());
-      }
     } catch (e) {
       final retries = event.retryCount + 1;
 

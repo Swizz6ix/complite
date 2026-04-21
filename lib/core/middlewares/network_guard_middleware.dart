@@ -17,15 +17,12 @@ class NetworkGuardMiddleware implements Middleware {
   int orderInPhase = 20;
 
   @override
-  Future<Results<R>> handle<R>(
+  Future<R> handle<R>(
     CompanyEvent event,
-    Future<Results<R>> Function(CompanyEvent) next,
+    Future<R> Function(CompanyEvent) next,
   ) async {
     if (!await network.isConnected) {
-      return Failure(
-        requestId: event.requestId,
-        errorMessage: "No internet connection"
-      );
+      throw StateError("No Internet");
     }
 
     return next(event);

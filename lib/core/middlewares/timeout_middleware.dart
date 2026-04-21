@@ -16,9 +16,9 @@ class TimeoutMiddleware implements Middleware {
   int orderInPhase = 60;
 
   @override
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next,
+    Future<T> Function(CompanyEvent event) next,
   ) async {
     // _logger.info("TimeoutMiddleware START ${event.requestId}");
     

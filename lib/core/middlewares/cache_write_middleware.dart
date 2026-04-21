@@ -18,16 +18,15 @@ class CacheWriteMiddleware implements Middleware{
   int orderInPhase = 80;
 
   @override
-  Future<Results<R>> handle<R>(
+  Future<R> handle<R>(
     CompanyEvent event,
-    Future<Results<R>> Function(CompanyEvent) next,
+    Future<R> Function(CompanyEvent) next,
   ) async {
     final key = eventKey(event);
     final result = await next(event);
 
-    if (result is Success<R>) {
-      await _store.set(key, CacheEntry(result.data));
-    }
+    await _store.set(key, CacheEntry(result));
+    print("cache written ==> $_store");
     return result;
   }
 }

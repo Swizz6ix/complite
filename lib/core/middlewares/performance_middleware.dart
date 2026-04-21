@@ -14,9 +14,9 @@ class PerformanceMiddleware extends Middleware {
   int orderInPhase = 70;
 
   @override
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next,
+    Future<T> Function(CompanyEvent event) next,
   ) async {
     final stopwatch = Stopwatch()..start();
 

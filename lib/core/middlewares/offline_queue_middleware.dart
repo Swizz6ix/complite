@@ -16,9 +16,9 @@ class OfflineQueueMiddleware implements Middleware {
   int orderInPhase = 50;
 
   @override
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next,
+    Future<T> Function(CompanyEvent event) next,
   ) async {
     print("enter offline");
     try {
@@ -30,10 +30,7 @@ class OfflineQueueMiddleware implements Middleware {
       print(s);
       await _queue.enqueue(event);
 
-      return Failure(
-        requestId: event.requestId,
-        errorMessage: "event enqueued",
-      );
+      throw StateError("Message enqueued");
     }
   }
 }

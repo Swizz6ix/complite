@@ -3,7 +3,7 @@ import 'package:complite/core/middlewares/middleware.dart';
 import 'package:complite/core/states/middleware_phase.dart';
 import 'package:complite/core/states/results.dart';
 
-class MiddlewareRegistry<R>{
+class MiddlewareRegistry<T>{
   final Map<MiddlewarePhase, List<Middleware>> _middlewares;
 
   MiddlewareRegistry(this._middlewares);
@@ -25,9 +25,9 @@ class MiddlewareRegistry<R>{
     return MiddlewareRegistry(map);
   }
       
-  Future<Results<R>> execute (
+  Future<T> execute (
     CompanyEvent event, 
-    Future<Results<R>> Function(CompanyEvent event) handler
+    Future<T> Function(CompanyEvent event) handler
     ) {
       final ordered = MiddlewarePhase.values
         .expand((phase) => _middlewares[phase]!)
@@ -37,9 +37,9 @@ class MiddlewareRegistry<R>{
   }
 
 
-  Future<Results<R>> Function(CompanyEvent) _dispatch(
+  Future<T> Function(CompanyEvent) _dispatch(
     List<Middleware> middleware,
-    Future<Results<R>> Function(CompanyEvent) handler,
+    Future<T> Function(CompanyEvent) handler,
   ) {
     return middleware.reversed.fold(
       handler,

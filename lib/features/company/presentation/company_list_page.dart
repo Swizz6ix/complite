@@ -1,6 +1,5 @@
 import 'package:complite/core/providers/company_providers.dart';
 import 'package:complite/core/utilities/cancellation_token.dart';
-import 'package:complite/core/utilities/result_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,45 +12,45 @@ class CompanyListPage extends ConsumerWidget {
 
     return Center(
       child: state.when(
-        idle: () => Center(
-          child: ElevatedButton(
-            onPressed: () {
-               final token = CancellationToken();
-              ref.read(companyProvider.notifier).fetch(token);
-            },
-            child: const Text("Load Companies"),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        data: (companies) => RefreshIndicator(
+          onRefresh: () async {
+            await ref.read(companyProvider.notifier).refresh();
+          }, 
+          child: Column(
+            children: [ 
+              Expanded(
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: companies.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(companies[index].name),
+                    subtitle: Text(companies[index].industry),
+                  );
+                }),
+              ),
+            ]
           )
         ),
-        loading: (_) =>  Center(child: const CircularProgressIndicator()),
-        success: (_, companies) => Column(
-          children: [ 
-            Expanded(
-              child: ListView.builder(
-              itemCount: companies.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(companies[index].name),
-                  subtitle: Text(companies[index].industry),
-                );
-              }),
-            ),
-          ]
-        ),
-        failure: (_, err) => Center(
+        error: (err, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("Error: $err"),
+              const SizedBox(width: 12,),
               ElevatedButton(
                 onPressed: () {
-                  final token = CancellationToken();
-                  ref.read(companyProvider.notifier).fetch(token);
+                  ref.read(companyProvider.notifier).refresh();
                 }, 
                 child: const Text("Retry"),
               ),
             ],
           ),
-      )),
+        )
+      ),
     );
   }
 }

@@ -20,12 +20,12 @@ class ConcurrencyQueueMiddleware implements Middleware {
   int orderInPhase = 40;
 
   @override
-  Future<Results<T>> handle<T> (
+  Future<T> handle<T> (
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next,
+    Future<T> Function(CompanyEvent event) next,
   ) {
     print("started concurrent");
-    final completer = Completer<Results<T>>();
+    final completer = Completer<T>();
     
     print("about to add to queue");
     _queue.add(() async {

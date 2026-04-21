@@ -12,14 +12,13 @@ import 'package:retry/retry.dart';
 class CompanyApi implements CompanyRepository {
   // final _logger = Logger("CompanyApp.Repository");
   @override
-  Future<Results<List<CompanyDto>>> fetchCompany(
+  Future<List<CompanyDto>> fetchCompany(
     String requestId, 
     // {
       // int page = 1,
       // int limit = 10
     // }
     ) async {
-      final requestId = DateTime.now().toIso8601String();
     try {
       final response = await retry(
         () => http
@@ -33,33 +32,30 @@ class CompanyApi implements CompanyRepository {
       );
 
       if (response.statusCode != 200) {
-        return Failure(
-          requestId: "[$requestId]:", 
-          errorMessage: "server error ${response.statusCode}");
+        throw HttpException("server error ${response.statusCode}");
       }
 
       // _logger.info("[$requestId] HTTP status code: ${response.statusCode}");
       
-      final List<dynamic> jsonList = jsonDecode(response.body);
-      final companies = jsonList
-      .map((json) => CompanyDto.fromJson(json))
-      .toList();
+      final jsonList = jsonDecode(response.body);
 
-      // _logger.fine("[$requestId] Parse ${companies.length} Companies");
-      print("done");
-      return Success("[$requestId]: page", companies);
+      if (jsonList is! List) {
+        throw const FormatException("Expected a JSON list");
+      }
+
+      return jsonList
+        .map((e) => CompanyDto.fromJson(e as Map<String, dynamic>))
+        .toList();
+
     } on SocketException {
       // _logger.warning("[$requestId] No internet connection");
-    return Failure(requestId: requestId, error:NoInternetError());
+    throw SocketException("No Internet connection");
     } on TimeoutException {
       // _logger.warning("[$requestId] Request time out");
-      return Failure(requestId: requestId, error:NoInternetError());
-    } on FormatException catch (e) {
+      throw TimeoutException("Request time out");
+    } on FormatException catch(e) {
       // _logger.severe("[$requestId] Json parsing error: ${e.message}");
-      return Failure(requestId: requestId, error:ParsingError());
-    } catch (e, stack) {
-      // _logger.severe("[$requestId] Unknown error: $e", e, stack);
-      return Failure(requestId: requestId, error:BusinessLogicError("Unknow error occurred"));
-    }
+      throw FormatException("Invalid JSON ${e.message}");
+    } 
   }
 }

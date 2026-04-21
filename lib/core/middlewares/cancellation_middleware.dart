@@ -11,9 +11,9 @@ class CancellationMiddleware implements Middleware {
   @override
   int orderInPhase = 38;
   @override
-  Future<Results<T>> handle<T>(
+  Future<T> handle<T>(
     CompanyEvent event,
-    Future<Results<T>> Function(CompanyEvent event) next, {
+    Future<T> Function(CompanyEvent event) next, {
     CancellationToken? token,
   }) async {
     token?.throwIfCancelled(); // before execution
